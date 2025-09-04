@@ -1,7 +1,63 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { MEMBER_NAMES } from './constants';
-import type { StatusMap, AppMessage, AttendanceStatus } from './types';
-import { gasRun } from './gasService';
+
+// --- Merged from constants.ts ---
+const MEMBER_NAMES: string[] = [
+  "熱田 望", "池田 大翔", "岩間 悠希", "白石 怜大", "高椋 煌生",
+  "布施 皓己", "吉井 千智", "秋山 七星", "大庭 悠誠", "熊谷 流星",
+  "佐藤 勘太", "下田 聖", "遅 志丞", "皆川 哲弥", "宮崎 惺也",
+  "山崎 泰蔵", "片山 幸典", "葛石 知佑", "金 悠鉉", "小林 慈人",
+  "坂内 元気", "下村 篤生", "染谷 尚太朗", "高木 翔玄", "棚瀬 侑真",
+  "中野 琥太郎", "西内 幸輝", "野田 慧", "秀村 紘嗣", "船津 太一",
+  "槇 啓秀", "松井 俐真", "森本 直樹", "山田 悠聖", "若林 空",
+  "小畑 高慈", "龍口 直史"
+];
+
+// --- Merged from types.ts ---
+type AttendanceStatus = 'attended' | 'left' | 'absent';
+type StatusMap = Record<string, AttendanceStatus>;
+interface AppMessage {
+  text: string;
+  type: 'success' | 'error';
+}
+
+// --- Merged from gasService.ts ---
+// This allows TypeScript to recognize the google.script.run API
+// provided by the Google Apps Script environment.
+declare global {
+  // We are defining this in the global scope
+  // eslint-disable-next-line no-unused-vars
+  namespace google.script {
+    interface Runner {
+      withSuccessHandler(callback: (result: any) => void): Runner;
+      withFailureHandler(callback: (error: Error) => void): Runner;
+      [functionName: string]: (...args: any[]) => void;
+    }
+  }
+
+  // eslint-disable-next-line no-unused-vars
+  const google: {
+    script: {
+      run: google.script.Runner;
+    }
+  };
+}
+
+/**
+ * Executes a Google Apps Script function and returns a Promise.
+ * This simplifies server-side calls from the client-side React code.
+ * @param functionName The name of the function to call in your Apps Script project.
+ * @param args The arguments to pass to the function.
+ * @returns A Promise that resolves with the return value of the Apps Script function.
+ */
+const gasRun = <T,>(functionName: string, ...args: any[]): Promise<T> => {
+  return new Promise((resolve, reject) => {
+    google.script.run
+      .withSuccessHandler((result: T) => resolve(result))
+      .withFailureHandler((error: Error) => reject(error))
+      [functionName](...args);
+  });
+};
+
 
 // --- Icon Components --- //
 
