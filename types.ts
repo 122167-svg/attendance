@@ -1,11 +1,7 @@
+
 export type AttendanceStatus = 'attended' | 'left' | 'absent';
 
-export interface AttendanceRecord {
-  name: string;
-  date: string; // YYYY-MM-DD
-  checkInTime: string | null; // HH:mm:ss
-  checkOutTime: string | null; // HH:mm:ss
-}
+export type StatusMap = Record<string, AttendanceStatus>;
 
 export interface AppMessage {
   text: string;
