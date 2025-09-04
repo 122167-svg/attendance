@@ -1,0 +1,5 @@
+{
+  "name": "Shogi Club Attendance App",
+  "description": "A high-performance attendance tracking application for a Shogi club, rebuilt with React and Tailwind CSS for a faster, more modern user experience. It is designed to interact with a Google Apps Script backend to record attendance in a Google Sheet.",
+  "requestFramePermissions": []
+}
